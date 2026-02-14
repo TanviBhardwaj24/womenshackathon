@@ -4,7 +4,7 @@ const SUGGESTIONS = [
   { icon: "📊", text: "How does my portfolio look?" },
   { icon: "🌱", text: "What should I invest in next?" },
   { icon: "🏖️", text: "Help me plan for retirement" },
-  { icon: "💳", text: "How can I pay off my loans faster?" },
+  { icon: "🔍", text: "Is this crypto address safe? 0x7F19720A857F834887FC9A7bC0a0fBe7Fc7f8102" },
 ];
 
 interface Props {
