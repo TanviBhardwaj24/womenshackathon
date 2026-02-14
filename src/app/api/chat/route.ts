@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { buildSystemPrompt } from "@/lib/system-prompt";
 import { UserProfile } from "@/types/profile";
-import { extractTelegramUrls, analyzeTelegramPost, analyzeLink } from "@/lib/blocksteer";
+import { blocksteerClient } from "@/lib/blocksteer";
 
 export async function POST(req: NextRequest) {
   const { messages, userProfile } = (await req.json()) as {
@@ -10,10 +10,14 @@ export async function POST(req: NextRequest) {
   };
 
   const lastMessage = messages[messages.length - 1]?.content || "";
-  const telegramUrls = extractTelegramUrls(lastMessage);
 
-  if (telegramUrls.length > 0) {
-    return handleTelegramLinkCheck(telegramUrls, userProfile);
+  if (blocksteerClient.isConfigured()) {
+    try {
+      const result = await blocksteerClient.chat(lastMessage);
+      return streamResponse(result.response);
+    } catch (error) {
+      console.error("BlockSteer error:", error);
+    }
   }
 
   const apiKey = process.env.MINIMAX_API_KEY;
@@ -72,52 +76,6 @@ export async function POST(req: NextRequest) {
       Connection: "keep-alive",
     },
   });
-}
-
-async function handleTelegramLinkCheck(urls: string[], profile: UserProfile) {
-  const name = profile.personalInfo.name || "sis";
-  const firstName = name.split(" ")[0];
-
-  let responseText = `Hey ${firstName}! I noticed you shared a Telegram link. Let me check it for potential scams...\n\n`;
-
-  try {
-    for (const url of urls.slice(0, 3)) {
-      const analysis = await analyzeTelegramPost(url);
-      
-      const riskEmoji = analysis.riskLevel === "critical" ? "🚨" :
-                        analysis.riskLevel === "high" ? "⚠️" :
-                        analysis.riskLevel === "medium" ? "⚡" : "✅";
-
-      responseText += `**${riskEmoji} Link: ${url}**\n`;
-      responseText += `Risk Level: ${analysis.riskLevel.toUpperCase()} (Score: ${analysis.riskScore}/100)\n\n`;
-      
-      if (analysis.isRisky) {
-        responseText += `**Warning:** ${analysis.summary}\n\n`;
-        if (analysis.recommendations.length > 0) {
-          responseText += "**My advice:**\n";
-          analysis.recommendations.slice(0, 3).forEach((rec, i) => {
-            responseText += `${i + 1}. ${rec}\n`;
-          });
-          responseText += "\n";
-        }
-      } else {
-        responseText += `This link appears to be relatively safe, but always stay cautious with investment-related content!\n\n`;
-      }
-    }
-
-    responseText += `---\n\n*Remember ${firstName}, if something sounds too good to be true, it usually is. Never share your private keys or seed phrases, and always verify investment opportunities through official channels. I'm here to help keep you safe!*`;
-
-  } catch (error) {
-    console.error("BlockSteer analysis error:", error);
-    responseText += `I wasn't able to fully analyze this link right now, but here are some general safety tips:\n\n`;
-    responseText += `1. **Never share your private keys or seed phrases** — no legitimate service will ask for these\n`;
-    responseText += `2. **Be wary of guaranteed returns** — legitimate investments always carry risk\n`;
-    responseText += `3. **Verify through official channels** — check the official website or social media\n`;
-    responseText += `4. **Take your time** — scammers create urgency to prevent you from thinking clearly\n\n`;
-    responseText += `*Stay safe out there, sis!*`;
-  }
-
-  return streamResponse(responseText);
 }
 
 function streamResponse(text: string) {
@@ -194,10 +152,8 @@ function mockStreamResponse(userMessage: string, profile: UserProfile) {
         ? `**Here's what I'd consider:**\n\n1. **The math approach** — At ${profile.debts[0].interestRate}% interest, this is relatively low-rate debt. You could keep making regular payments while investing the difference in your Roth IRA or brokerage, where you'd likely earn more than ${profile.debts[0].interestRate}% over time.\n\n2. **The peace-of-mind approach** — If that debt is stressing you out, there's real value in paying it off faster. You could add an extra $500-1000/month from your income and be done in about ${Math.ceil(profile.debts[0].remainingBalance / 1000)} months.\n\n3. **Check for refinancing** — Depending on your credit score, you might be able to refinance to an even lower rate.\n\nPersonally? I'd lean toward a hybrid approach — pay a little extra on the loans while still investing. But go with what lets you sleep best at night!`
         : "Since you're debt-free, you can put that extra money to work! Focus on building your investment portfolio and emergency fund."
     }`;
-  } else if (lower.includes("scam") || lower.includes("safe") || lower.includes("legit")) {
-    response = `Great question about staying safe, ${firstName}! Here's what I always tell my friends about avoiding scams:\n\n**Red flags to watch for:**\n1. **Guaranteed returns** — No legitimate investment can promise specific returns\n2. **Pressure to act fast** — Scammers create urgency so you don't have time to think\n3. **Requests for private keys or seed phrases** — NEVER share these with anyone\n4. **Too good to be true** — If it sounds amazing, it probably isn't real\n\n**How to verify:**\n- Check the official website directly (don't click links in messages)\n- Look up the project on trusted sources like CoinGecko or CoinMarketCap\n- Search for reviews and scam reports\n- Ask in trusted community forums\n\n**Pro tip:** You can paste any Telegram link here and I'll check it for you using BlockSteer's scam detection!\n\n*Stay vigilant, sis! Your financial security is worth protecting.*`;
   } else {
-    response = `Hey ${firstName}! That's a great question. Let me share my thoughts.\n\nAs someone earning $${profile.personalInfo.annualIncome.toLocaleString()}/year in ${profile.personalInfo.location}, you're in a strong position. The key is making your money work as hard as you do.\n\nHere are the big things I always think about:\n\n1. **Are you maximizing tax-advantaged accounts?** (401k, Roth IRA)\n2. **Do you have 3-6 months of expenses saved?** (Emergency fund)\n3. **Is your money sitting idle or growing?** (Investing vs. just saving)\n4. **Are you managing debt strategically?**\n\n**New feature:** If you ever come across a suspicious Telegram link or investment opportunity, just paste it here and I'll check if it's a scam!\n\nFeel free to ask me about any of these topics specifically, or anything else on your mind! I'm here for you, sis.\n\n*Quick reminder: I'm here to help you learn and think through options, but I'm not a licensed financial advisor. For major financial decisions, it's always smart to consult with a certified financial planner.*`;
+    response = `Hey ${firstName}! That's a great question. Let me share my thoughts.\n\nAs someone earning $${profile.personalInfo.annualIncome.toLocaleString()}/year in ${profile.personalInfo.location}, you're in a strong position. The key is making your money work as hard as you do.\n\nHere are the big things I always think about:\n\n1. **Are you maximizing tax-advantaged accounts?** (401k, Roth IRA)\n2. **Do you have 3-6 months of expenses saved?** (Emergency fund)\n3. **Is your money sitting idle or growing?** (Investing vs. just saving)\n4. **Are you managing debt strategically?**\n\nFeel free to ask me about any of these topics specifically, or anything else on your mind! I'm here for you, sis.\n\n*Quick reminder: I'm here to help you learn and think through options, but I'm not a licensed financial advisor. For major financial decisions, it's always smart to consult with a certified financial planner.*`;
   }
 
   return streamResponse(response);
