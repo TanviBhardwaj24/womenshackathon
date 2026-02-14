@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePersona } from "@/context/PersonaContext";
 import { Persona } from "@/types/persona";
 
-function PersonaIcon({ color }: { color: string }) {
+function PersonaIcon() {
   return (
     <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
       <circle cx="30" cy="52" r="12" fill="#520404" />
@@ -22,13 +22,13 @@ function PersonaCard({
   onSelect: (p: Persona) => void;
 }) {
   return (
-    <div className="flex flex-col items-center px-6 w-full shrink-0">
-      {/* Card */}
+    <div className="flex flex-col items-center w-full h-full">
+      {/* Card -- flex-1 so all cards share the same height */}
       <div
-        className="w-full max-w-[280px] rounded-3xl flex flex-col items-center pt-16 pb-8 px-6"
+        className="w-full rounded-3xl flex flex-col items-center justify-end pt-12 pb-8 px-6 flex-1"
         style={{ backgroundColor: persona.cardColor }}
       >
-        <PersonaIcon color={persona.cardColor} />
+        <PersonaIcon />
         <h3
           className="text-2xl font-serif text-center mt-6 leading-snug"
           style={{ color: "#520404" }}
@@ -45,7 +45,7 @@ function PersonaCard({
           )}
         </h3>
         <p
-          className="text-sm text-center mt-4 leading-relaxed"
+          className="text-sm text-center mt-3 leading-relaxed"
           style={{ color: "rgba(82, 4, 4, 0.7)" }}
         >
           {persona.description}
@@ -55,7 +55,7 @@ function PersonaCard({
       {/* Let's talk button */}
       <button
         onClick={() => onSelect(persona)}
-        className="mt-6 w-full max-w-[240px] py-3 rounded-full text-sm font-semibold border transition-colors"
+        className="mt-4 w-full py-3 rounded-full text-sm font-semibold border transition-colors"
         style={{
           borderColor: "#520404",
           color: "#520404",
@@ -106,25 +106,34 @@ export default function PersonaSelector({ onClose }: Props) {
         </button>
       </div>
 
-      {/* Carousel */}
-      <div className="flex-1 flex items-center justify-center overflow-hidden">
-        <div
-          className="flex transition-transform duration-300 ease-out"
-          style={{
-            transform: `translateX(-${currentIndex * 100}%)`,
-            width: `${personas.length * 100}%`,
-          }}
-        >
+      {/* Desktop: grid of all cards | Mobile: carousel */}
+      <div className="flex-1 flex items-center justify-center overflow-hidden px-4">
+        {/* Desktop grid -- hidden on mobile */}
+        <div className="hidden md:grid md:grid-cols-4 gap-5 w-full max-w-4xl items-stretch">
           {personas.map((p) => (
-            <div key={p.id} style={{ width: `${100 / personas.length}%` }}>
-              <PersonaCard persona={p} onSelect={handleSelect} />
-            </div>
+            <PersonaCard key={p.id} persona={p} onSelect={handleSelect} />
           ))}
+        </div>
+
+        {/* Mobile carousel -- hidden on desktop */}
+        <div className="md:hidden w-full flex items-stretch overflow-hidden">
+          <div
+            className="flex transition-transform duration-300 ease-out w-full items-stretch"
+            style={{
+              transform: `translateX(-${currentIndex * 100}%)`,
+            }}
+          >
+            {personas.map((p) => (
+              <div key={p.id} className="w-full shrink-0 px-6 flex" style={{ minWidth: "100%" }}>
+                <PersonaCard persona={p} onSelect={handleSelect} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Navigation arrows */}
-      <div className="flex items-center justify-center gap-4 pb-10">
+      {/* Navigation arrows -- mobile only */}
+      <div className="flex md:hidden items-center justify-center gap-4 pb-10 pt-4">
         <button
           onClick={goPrev}
           disabled={currentIndex === 0}
