@@ -6,15 +6,13 @@ import { useUserProfile } from "@/context/UserProfileContext";
 import { UserProfile, emptyProfile } from "@/types/profile";
 import { DEMO_PROFILE } from "@/lib/demo-profile";
 import ProgressBar from "./ProgressBar";
+import StepName from "./StepName";
 import StepPersonalInfo from "./StepPersonalInfo";
-import StepBrokerageAccounts from "./StepBrokerageAccounts";
-import StepRetirement from "./StepRetirement";
-import StepBanking from "./StepBanking";
-import StepInvestments from "./StepInvestments";
+import StepConnectAccounts from "./StepConnectAccounts";
 import StepDebt from "./StepDebt";
 import StepReview from "./StepReview";
 
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 5;
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -28,7 +26,7 @@ export default function OnboardingWizard() {
 
   const fillDemo = () => {
     setData({ ...DEMO_PROFILE });
-    setStep(TOTAL_STEPS - 1); // Jump to review
+    setStep(TOTAL_STEPS - 1);
   };
 
   const handleComplete = () => {
@@ -40,66 +38,62 @@ export default function OnboardingWizard() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-foreground">
-            Didi Finance
-          </h1>
-          <p className="text-sm text-text-secondary mt-1">Your Financial Big Sister</p>
+          <img
+            src="/images/logo_empowHer.png"
+            alt="empowHer"
+            className="h-10 mx-auto"
+          />
         </div>
 
         <div className="bg-surface rounded-2xl shadow-sm border border-border p-6 sm:p-8">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex-1">
-              <ProgressBar currentStep={step} totalSteps={TOTAL_STEPS} />
+          {step > 0 && (
+            <div className="mb-6">
+              <ProgressBar currentStep={step - 1} totalSteps={TOTAL_STEPS - 1} />
             </div>
-          </div>
+          )}
 
-          <button
-            onClick={fillDemo}
-            className="mb-6 text-xs px-3 py-1.5 rounded-full bg-accent-light text-accent hover:bg-accent hover:text-white transition-colors font-medium"
-          >
-            Use Demo Profile
-          </button>
+          {step > 0 && (
+            <button
+              onClick={fillDemo}
+              className="mb-6 text-xs px-3 py-1.5 rounded-full bg-accent-light text-accent hover:bg-accent hover:text-white transition-colors font-medium"
+            >
+              Use Demo Profile
+            </button>
+          )}
 
           {step === 0 && (
-            <StepPersonalInfo
-              data={data.personalInfo}
-              onChange={(personalInfo) => setData({ ...data, personalInfo })}
+            <StepName
+              name={data.personalInfo.name}
+              onChange={(name) =>
+                setData({ ...data, personalInfo: { ...data.personalInfo, name } })
+              }
               onNext={goNext}
             />
           )}
           {step === 1 && (
-            <StepBrokerageAccounts
-              data={data.brokerageAccounts}
-              onChange={(brokerageAccounts) => setData({ ...data, brokerageAccounts })}
+            <StepPersonalInfo
+              data={data.personalInfo}
+              userName={data.personalInfo.name.split(" ")[0]}
+              onChange={(personalInfo) => setData({ ...data, personalInfo })}
               onNext={goNext}
               onBack={goBack}
             />
           )}
           {step === 2 && (
-            <StepRetirement
-              data={data.retirement}
-              onChange={(retirement) => setData({ ...data, retirement })}
+            <StepConnectAccounts
+              brokerageAccounts={data.brokerageAccounts}
+              bankAccounts={data.bankAccounts}
+              investments={data.investments}
+              retirement={data.retirement}
+              onChangeBrokerage={(brokerageAccounts) => setData({ ...data, brokerageAccounts })}
+              onChangeBank={(bankAccounts) => setData({ ...data, bankAccounts })}
+              onChangeInvestments={(investments) => setData({ ...data, investments })}
+              onChangeRetirement={(retirement) => setData({ ...data, retirement })}
               onNext={goNext}
               onBack={goBack}
             />
           )}
           {step === 3 && (
-            <StepBanking
-              data={data.bankAccounts}
-              onChange={(bankAccounts) => setData({ ...data, bankAccounts })}
-              onNext={goNext}
-              onBack={goBack}
-            />
-          )}
-          {step === 4 && (
-            <StepInvestments
-              data={data.investments}
-              onChange={(investments) => setData({ ...data, investments })}
-              onNext={goNext}
-              onBack={goBack}
-            />
-          )}
-          {step === 5 && (
             <StepDebt
               data={data.debts}
               onChange={(debts) => setData({ ...data, debts })}
@@ -107,7 +101,7 @@ export default function OnboardingWizard() {
               onBack={goBack}
             />
           )}
-          {step === 6 && (
+          {step === 4 && (
             <StepReview
               data={data}
               onBack={goBack}

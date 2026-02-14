@@ -1,6 +1,6 @@
 "use client";
 
-const STEP_LABELS = ["Personal", "Brokerage", "Retirement", "Banking", "Investments", "Debt", "Review"];
+const STEP_LABELS = ["About You", "Accounts", "Balances", "Review"];
 
 interface ProgressBarProps {
   currentStep: number;

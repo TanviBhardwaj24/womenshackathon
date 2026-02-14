@@ -4,8 +4,8 @@ export const DEMO_PROFILE: UserProfile = {
   personalInfo: {
     name: "Priya Sharma",
     age: 30,
-    occupation: "Software Engineer",
-    location: "San Francisco, CA",
+    occupation: "",
+    location: "United States",
     annualIncome: 180000,
   },
   brokerageAccounts: [

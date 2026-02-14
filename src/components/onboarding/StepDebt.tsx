@@ -39,9 +39,9 @@ export default function StepDebt({ data, onChange, onNext, onBack }: Props) {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold text-foreground">Debts & Loans</h2>
-        <p className="text-sm text-text-secondary mt-1">
-          Add any outstanding debts or loans. This helps us give better advice.
+        <h2 className="text-xl font-semibold font-serif text-heading">{"What You're Working Through"}</h2>
+        <p className="text-sm text-text-secondary mt-1 leading-relaxed">
+          {"No judgment here -- knowing your balances helps us build a plan that actually works for you."}
         </p>
       </div>
 
