@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useChat } from "@/context/ChatContext";
 import { useUserProfile } from "@/context/UserProfileContext";
 import { usePersona } from "@/context/PersonaContext";
@@ -12,8 +11,7 @@ import VoiceToggle from "./VoiceToggle";
 import PersonaSelector from "./PersonaSelector";
 
 export default function ChatContainer() {
-  const router = useRouter();
-  const { state, sendMessage, toggleVoice } = useChat();
+  const { state, sendMessage, clearMessages, toggleVoice } = useChat();
   const { profile, clearProfile } = useUserProfile();
   const { persona } = usePersona();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -34,15 +32,21 @@ export default function ChatContainer() {
       <header className="border-b border-border bg-surface px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => router.push("/")}
-              className="w-8 h-8 flex items-center justify-center rounded-full text-text-secondary hover:text-foreground transition-colors shrink-0"
-              title="Back to home"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+            {state.messages.length > 0 ? (
+              <button
+                onClick={clearMessages}
+                className="w-8 h-8 flex items-center justify-center rounded-full text-text-secondary hover:text-foreground transition-colors shrink-0"
+                title="Back to home"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            ) : (
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" style={{ backgroundColor: "#520404" }}>
+                eH
+              </div>
+            )}
             {/* Persona selector chip */}
             <button
               onClick={() => setShowPersonaSelector(true)}

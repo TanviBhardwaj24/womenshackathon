@@ -8,6 +8,7 @@ import { Persona } from "@/types/persona";
 interface ChatContextType {
   state: ChatState;
   sendMessage: (content: string, profile: UserProfile, persona?: Persona) => Promise<void>;
+  clearMessages: () => void;
   toggleVoice: () => void;
   setIsPlaying: (playing: boolean) => void;
 }
@@ -20,7 +21,8 @@ type Action =
   | { type: "SET_LOADING"; loading: boolean }
   | { type: "TOGGLE_VOICE" }
   | { type: "SET_PLAYING"; playing: boolean }
-  | { type: "SET_AUDIO_URL"; messageId: string; url: string };
+  | { type: "SET_AUDIO_URL"; messageId: string; url: string }
+  | { type: "CLEAR_MESSAGES" };
 
 function reducer(state: ChatState, action: Action): ChatState {
   switch (action.type) {
@@ -46,6 +48,8 @@ function reducer(state: ChatState, action: Action): ChatState {
       );
       return { ...state, messages: msgs };
     }
+    case "CLEAR_MESSAGES":
+      return { ...state, messages: [], isLoading: false };
     default:
       return state;
   }
@@ -149,6 +153,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
   }, [state.messages, state.voiceMode]);
 
+  const clearMessages = useCallback(() => {
+    dispatch({ type: "CLEAR_MESSAGES" });
+  }, []);
+
   const toggleVoice = useCallback(() => {
     dispatch({ type: "TOGGLE_VOICE" });
   }, []);
@@ -158,7 +166,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <ChatContext.Provider value={{ state, sendMessage, toggleVoice, setIsPlaying }}>
+    <ChatContext.Provider value={{ state, sendMessage, clearMessages, toggleVoice, setIsPlaying }}>
       {children}
     </ChatContext.Provider>
   );
