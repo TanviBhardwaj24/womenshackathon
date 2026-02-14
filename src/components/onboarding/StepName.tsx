@@ -34,14 +34,14 @@ export default function StepName({ name, onChange, onNext }: Props) {
   return (
     <div
       className="fixed inset-0 flex flex-col"
-      style={{ backgroundColor: "#520404", zIndex: 50 }}
+      style={{ backgroundColor: "#FFEDBD", zIndex: 50 }}
     >
       {/* Logo at top */}
       <div className="flex justify-center pt-14">
         <img
           src="/images/logo_empowHer.png"
           alt="empowHer"
-          className="h-8 brightness-0 invert"
+          className="h-8"
         />
       </div>
 
@@ -49,7 +49,7 @@ export default function StepName({ name, onChange, onNext }: Props) {
       <div className="flex-1 flex flex-col items-center justify-center px-8">
         <h2
           className="text-3xl font-serif leading-snug text-center mb-14"
-          style={{ color: "#FFEDBD" }}
+          style={{ color: "#520404" }}
         >
           Hey,
           <br />
@@ -61,7 +61,7 @@ export default function StepName({ name, onChange, onNext }: Props) {
           <div>
             <label
               className="block text-xs font-medium tracking-wide uppercase mb-2"
-              style={{ color: "rgba(255, 237, 189, 0.6)" }}
+              style={{ color: "rgba(82, 4, 4, 0.6)" }}
             >
               First name
             </label>
@@ -73,9 +73,9 @@ export default function StepName({ name, onChange, onNext }: Props) {
               autoFocus
               className="w-full bg-transparent border-0 border-b pb-2 text-lg focus:outline-none focus:ring-0"
               style={{
-                color: "#FFEDBD",
-                borderBottomColor: "rgba(255, 237, 189, 0.35)",
-                caretColor: "#FFEDBD",
+                color: "#520404",
+                borderBottomColor: "rgba(82, 4, 4, 0.35)",
+                caretColor: "#520404",
               }}
             />
           </div>
@@ -84,7 +84,7 @@ export default function StepName({ name, onChange, onNext }: Props) {
           <div>
             <label
               className="block text-xs font-medium tracking-wide uppercase mb-2"
-              style={{ color: "rgba(255, 237, 189, 0.6)" }}
+              style={{ color: "rgba(82, 4, 4, 0.6)" }}
             >
               Last name
             </label>
@@ -95,9 +95,9 @@ export default function StepName({ name, onChange, onNext }: Props) {
               onKeyDown={handleKeyDown}
               className="w-full bg-transparent border-0 border-b pb-2 text-lg focus:outline-none focus:ring-0"
               style={{
-                color: "#FFEDBD",
-                borderBottomColor: "rgba(255, 237, 189, 0.35)",
-                caretColor: "#FFEDBD",
+                color: "#520404",
+                borderBottomColor: "rgba(82, 4, 4, 0.35)",
+                caretColor: "#520404",
               }}
             />
           </div>
@@ -111,8 +111,8 @@ export default function StepName({ name, onChange, onNext }: Props) {
           disabled={!isValid}
           className="w-full max-w-xs mx-auto block py-4 rounded-full text-base font-semibold transition-opacity disabled:opacity-40"
           style={{
-            backgroundColor: "#FFEDBD",
-            color: "#520404",
+            backgroundColor: "#520404",
+            color: "#FFEDBD",
           }}
         >
           Next
