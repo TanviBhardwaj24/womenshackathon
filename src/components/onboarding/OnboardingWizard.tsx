@@ -34,6 +34,20 @@ export default function OnboardingWizard() {
     router.push("/chat");
   };
 
+  // Step 0: Full-screen name input (no card wrapper)
+  if (step === 0) {
+    return (
+      <StepName
+        name={data.personalInfo.name}
+        onChange={(name) =>
+          setData({ ...data, personalInfo: { ...data.personalInfo, name } })
+        }
+        onNext={goNext}
+      />
+    );
+  }
+
+  // Steps 1-4: Card-based layout
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
@@ -46,30 +60,17 @@ export default function OnboardingWizard() {
         </div>
 
         <div className="bg-surface rounded-2xl shadow-sm border border-border p-6 sm:p-8">
-          {step > 0 && (
-            <div className="mb-6">
-              <ProgressBar currentStep={step - 1} totalSteps={TOTAL_STEPS - 1} />
-            </div>
-          )}
+          <div className="mb-6">
+            <ProgressBar currentStep={step - 1} totalSteps={TOTAL_STEPS - 1} />
+          </div>
 
-          {step > 0 && (
-            <button
-              onClick={fillDemo}
-              className="mb-6 text-xs px-3 py-1.5 rounded-full bg-accent-light text-accent hover:bg-accent hover:text-white transition-colors font-medium"
-            >
-              Use Demo Profile
-            </button>
-          )}
+          <button
+            onClick={fillDemo}
+            className="mb-6 text-xs px-3 py-1.5 rounded-full bg-accent-light text-accent hover:bg-accent hover:text-white transition-colors font-medium"
+          >
+            Use Demo Profile
+          </button>
 
-          {step === 0 && (
-            <StepName
-              name={data.personalInfo.name}
-              onChange={(name) =>
-                setData({ ...data, personalInfo: { ...data.personalInfo, name } })
-              }
-              onNext={goNext}
-            />
-          )}
           {step === 1 && (
             <StepPersonalInfo
               data={data.personalInfo}
