@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useUserProfile } from "@/context/UserProfileContext";
 import Image from "next/image";
@@ -9,23 +9,28 @@ export default function Home() {
   const { isOnboarded, isLoading } = useUserProfile();
   const router = useRouter();
   const [fadeOut, setFadeOut] = useState(false);
+  const [splashReady, setSplashReady] = useState(false);
+  const hasNavigated = useRef(false);
 
+  // Mark splash as ready after minimum display time
   useEffect(() => {
-    const redirectTimer = setTimeout(() => {
-      setFadeOut(true);
+    const timer = setTimeout(() => {
+      setSplashReady(true);
     }, 2800);
+    return () => clearTimeout(timer);
+  }, []);
 
-    const navigateTimer = setTimeout(() => {
-      if (!isLoading) {
+  // Navigate once both splash is ready and profile loading is done
+  useEffect(() => {
+    if (splashReady && !isLoading && !hasNavigated.current) {
+      hasNavigated.current = true;
+      setFadeOut(true);
+      const navTimer = setTimeout(() => {
         router.push(isOnboarded ? "/chat" : "/onboarding");
-      }
-    }, 3400);
-
-    return () => {
-      clearTimeout(redirectTimer);
-      clearTimeout(navigateTimer);
-    };
-  }, [isOnboarded, isLoading, router]);
+      }, 600);
+      return () => clearTimeout(navTimer);
+    }
+  }, [splashReady, isLoading, isOnboarded, router]);
 
   return (
     <div
