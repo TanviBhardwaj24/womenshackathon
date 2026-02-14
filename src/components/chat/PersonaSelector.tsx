@@ -94,8 +94,8 @@ export default function PersonaSelector({ onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col" style={{ backgroundColor: "#FFFDF7" }}>
-      {/* Close button */}
-      <div className="flex justify-end p-4">
+      {/* Top bar with close button */}
+      <div className="flex justify-end px-5 pt-4">
         <button
           onClick={onClose}
           className="w-8 h-8 flex items-center justify-center rounded-full text-text-secondary hover:text-foreground transition-colors"
@@ -106,8 +106,21 @@ export default function PersonaSelector({ onClose }: Props) {
         </button>
       </div>
 
+      {/* Heading */}
+      <div className="px-6 pt-2 pb-6 text-center">
+        <h1
+          className="text-3xl sm:text-4xl font-bold font-serif leading-snug text-balance"
+          style={{ color: "#520404" }}
+        >
+          Money Conversations, Your Way
+        </h1>
+        <p className="text-sm text-text-secondary mt-2 leading-relaxed">
+          Support that matches your journey
+        </p>
+      </div>
+
       {/* Desktop: grid of all cards | Mobile: carousel */}
-      <div className="flex-1 flex items-center justify-center overflow-hidden px-4">
+      <div className="flex-1 flex items-start md:items-center justify-center overflow-hidden px-4">
         {/* Desktop grid -- hidden on mobile */}
         <div className="hidden md:grid md:grid-cols-4 gap-5 w-full max-w-4xl items-stretch">
           {personas.map((p) => (
