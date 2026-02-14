@@ -162,6 +162,29 @@ class BlockSteerClient {
     }
     return "Analysis complete";
   }
+
+  async chat(message: string): Promise<BlockSteerChatResponse> {
+    const token = await this.authenticate();
+
+    const response = await fetch(`${this.apiUrl}/agent/chat`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`BlockSteer chat failed: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  isConfigured(): boolean {
+    return Boolean(this.username && this.password);
+  }
 }
 
 export const blocksteerClient = new BlockSteerClient();
