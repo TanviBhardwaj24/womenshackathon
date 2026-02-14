@@ -4,8 +4,13 @@ export const DEMO_PROFILE: UserProfile = {
   personalInfo: {
     name: "Priya Sharma",
     age: 30,
+<<<<<<< HEAD
     occupation: "",
     location: "United States",
+=======
+    occupation: "Software Engineer",
+    location: "San Francisco, CA",
+>>>>>>> tanvi/main
     annualIncome: 180000,
   },
   brokerageAccounts: [

@@ -84,9 +84,13 @@ export default function StepBanking({ data, onChange, onNext, onBack }: Props) {
 
       <button
         onClick={addAccount}
+<<<<<<< HEAD
         className="w-full py-3 border-2 border-dashed border-border rounded-xl text-sm text-text-secondary transition-colors"
         onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#520404"; e.currentTarget.style.color = "#520404"; }}
         onMouseLeave={(e) => { e.currentTarget.style.borderColor = ""; e.currentTarget.style.color = ""; }}
+=======
+        className="w-full py-3 border-2 border-dashed border-border rounded-lg text-sm text-text-secondary hover:border-accent hover:text-accent transition-colors"
+>>>>>>> tanvi/main
       >
         + Add Bank Account
       </button>

@@ -3,12 +3,19 @@
 import { createContext, useContext, useReducer, ReactNode, useCallback } from "react";
 import { Message, ChatState } from "@/types/chat";
 import { UserProfile } from "@/types/profile";
+<<<<<<< HEAD
 import { Persona } from "@/types/persona";
 
 interface ChatContextType {
   state: ChatState;
   sendMessage: (content: string, profile: UserProfile, persona?: Persona) => Promise<void>;
   clearMessages: () => void;
+=======
+
+interface ChatContextType {
+  state: ChatState;
+  sendMessage: (content: string, profile: UserProfile) => Promise<void>;
+>>>>>>> tanvi/main
   toggleVoice: () => void;
   setIsPlaying: (playing: boolean) => void;
 }
@@ -21,8 +28,12 @@ type Action =
   | { type: "SET_LOADING"; loading: boolean }
   | { type: "TOGGLE_VOICE" }
   | { type: "SET_PLAYING"; playing: boolean }
+<<<<<<< HEAD
   | { type: "SET_AUDIO_URL"; messageId: string; url: string }
   | { type: "CLEAR_MESSAGES" };
+=======
+  | { type: "SET_AUDIO_URL"; messageId: string; url: string };
+>>>>>>> tanvi/main
 
 function reducer(state: ChatState, action: Action): ChatState {
   switch (action.type) {
@@ -48,8 +59,11 @@ function reducer(state: ChatState, action: Action): ChatState {
       );
       return { ...state, messages: msgs };
     }
+<<<<<<< HEAD
     case "CLEAR_MESSAGES":
       return { ...state, messages: [], isLoading: false };
+=======
+>>>>>>> tanvi/main
     default:
       return state;
   }
@@ -65,7 +79,11 @@ const initialState: ChatState = {
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+<<<<<<< HEAD
   const sendMessage = useCallback(async (content: string, profile: UserProfile, persona?: Persona) => {
+=======
+  const sendMessage = useCallback(async (content: string, profile: UserProfile) => {
+>>>>>>> tanvi/main
     const userMsg: Message = {
       id: crypto.randomUUID(),
       role: "user",
@@ -92,7 +110,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
         body: JSON.stringify({ messages: allMessages, userProfile: profile, personaId: persona?.id }),
+=======
+        body: JSON.stringify({ messages: allMessages, userProfile: profile }),
+>>>>>>> tanvi/main
       });
 
       if (!res.ok) throw new Error("Chat request failed");
@@ -153,10 +175,13 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
   }, [state.messages, state.voiceMode]);
 
+<<<<<<< HEAD
   const clearMessages = useCallback(() => {
     dispatch({ type: "CLEAR_MESSAGES" });
   }, []);
 
+=======
+>>>>>>> tanvi/main
   const toggleVoice = useCallback(() => {
     dispatch({ type: "TOGGLE_VOICE" });
   }, []);
@@ -166,7 +191,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
+<<<<<<< HEAD
     <ChatContext.Provider value={{ state, sendMessage, clearMessages, toggleVoice, setIsPlaying }}>
+=======
+    <ChatContext.Provider value={{ state, sendMessage, toggleVoice, setIsPlaying }}>
+>>>>>>> tanvi/main
       {children}
     </ChatContext.Provider>
   );

@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { buildSystemPrompt } from "@/lib/system-prompt";
 import { UserProfile } from "@/types/profile";
+<<<<<<< HEAD
 import { PERSONAS, DEFAULT_PERSONA } from "@/types/persona";
 
 export async function POST(req: NextRequest) {
@@ -19,6 +20,40 @@ export async function POST(req: NextRequest) {
   }
 
   const systemPrompt = buildSystemPrompt(userProfile, persona);
+=======
+import { blocksteerClient, analyzeWalletAddress, extractWalletAddresses } from "@/lib/blocksteer";
+import { extractWalletAddressesViaBem } from "@/lib/bem";
+
+export async function POST(req: NextRequest) {
+  const { messages, userProfile } = (await req.json()) as {
+    messages: { role: string; content: string }[];
+    userProfile: UserProfile;
+  };
+
+  const lastMessage = messages[messages.length - 1]?.content || "";
+
+  if (blocksteerClient.isConfigured()) {
+    try {
+      const result = await blocksteerClient.chat(lastMessage);
+      return streamResponse(result.response);
+    } catch (error) {
+      console.error("BlockSteer error:", error);
+    }
+  }
+
+  // Check for crypto wallet addresses using BEM extraction + BlockSteer analysis
+  const walletAddresses = extractWalletAddresses(lastMessage);
+  if (walletAddresses.length > 0) {
+    return handleWalletAddressCheck(lastMessage, walletAddresses, userProfile);
+  }
+
+  const apiKey = process.env.MINIMAX_API_KEY;
+  if (!apiKey || apiKey === "your_minimax_api_key_here") {
+    return mockStreamResponse(lastMessage, userProfile);
+  }
+
+  const systemPrompt = buildSystemPrompt(userProfile);
+>>>>>>> tanvi/main
 
   const response = await fetch("https://api.minimaxi.chat/v1/text/chatcompletion_v2", {
     method: "POST",
@@ -38,10 +73,16 @@ export async function POST(req: NextRequest) {
   if (!response.ok) {
     const error = await response.text();
     console.error("MiniMax API error:", error);
+<<<<<<< HEAD
     return mockStreamResponse(messages[messages.length - 1]?.content || "", userProfile, persona);
   }
 
   // Forward the stream
+=======
+    return mockStreamResponse(lastMessage, userProfile);
+  }
+
+>>>>>>> tanvi/main
   const stream = new ReadableStream({
     async start(controller) {
       const reader = response.body?.getReader();
@@ -72,6 +113,7 @@ export async function POST(req: NextRequest) {
   });
 }
 
+<<<<<<< HEAD
 function mockStreamResponse(userMessage: string, profile: UserProfile, persona: typeof DEFAULT_PERSONA) {
   const name = profile.personalInfo.name || "friend";
   const firstName = name.split(" ")[0];
@@ -84,6 +126,113 @@ function mockStreamResponse(userMessage: string, profile: UserProfile, persona: 
     "safety-guardian": `Good that you're thinking about this, ${firstName}.`,
   };
   const prefix = prefixes[persona.id] || `Hey ${firstName}!`;
+=======
+async function handleWalletAddressCheck(
+  originalMessage: string,
+  walletAddresses: { address: string; type: string }[],
+  profile: UserProfile
+) {
+  const name = profile.personalInfo.name || "sis";
+  const firstName = name.split(" ")[0];
+
+  let responseText = `Hey ${firstName}! 🔍 I detected crypto wallet address(es) in your message. Let me run a safety check...\n\n`;
+
+  try {
+    // Use BEM to extract and analyze the context of the wallet addresses
+    const bemAnalysis = await extractWalletAddressesViaBem(originalMessage);
+    console.log("BEM wallet extraction result:", JSON.stringify(bemAnalysis, null, 2));
+
+    if (bemAnalysis.has_suspicious_context) {
+      responseText += `⚠️ **Suspicious Context Detected:** ${bemAnalysis.message_summary}\n\n`;
+      responseText += `The message you shared has red flags — it appears to be asking you to send cryptocurrency, which is a common scam tactic.\n\n`;
+    }
+
+    // Analyze each wallet address through BlockSteer
+    for (const wallet of walletAddresses.slice(0, 3)) {
+      try {
+        const analysis = await analyzeWalletAddress(wallet.address);
+
+        const riskEmoji =
+          analysis.riskLevel === "critical" ? "🚨" :
+          analysis.riskLevel === "high" ? "⚠️" :
+          analysis.riskLevel === "medium" ? "⚡" : "✅";
+
+        responseText += `**${riskEmoji} ${wallet.type} Address:** \`${wallet.address}\`\n`;
+        responseText += `**Risk Level:** ${analysis.riskLevel.toUpperCase()} (Score: ${analysis.riskScore}/100)\n\n`;
+
+        if (analysis.isRisky) {
+          responseText += `**🚫 Warning:** ${analysis.summary}\n\n`;
+          if (analysis.recommendations.length > 0) {
+            responseText += "**What you should do:**\n";
+            analysis.recommendations.slice(0, 3).forEach((rec, i) => {
+              responseText += `${i + 1}. ${rec}\n`;
+            });
+            responseText += "\n";
+          }
+        } else {
+          responseText += `This address doesn't appear in known scam databases, but please still exercise caution.\n\n`;
+        }
+      } catch (error) {
+        console.error(`Error analyzing wallet ${wallet.address}:`, error);
+        responseText += `**⚠️ ${wallet.type} Address:** \`${wallet.address}\`\n`;
+        responseText += `Unable to fully verify this address at the moment. Please proceed with extreme caution.\n\n`;
+      }
+    }
+
+    // Add contextual safety advice
+    responseText += `---\n\n`;
+    responseText += `**💡 ${firstName}'s Safety Checklist:**\n`;
+    responseText += `1. **Never send crypto to addresses you received in unsolicited messages** — legitimate projects don't ask for this\n`;
+    responseText += `2. **"Send X to receive Y" is ALWAYS a scam** — no one gives away free coins for ETH/BTC\n`;
+    responseText += `3. **Verify on Etherscan/blockchain explorers** — check the address history before any transaction\n`;
+    responseText += `4. **When in doubt, don't send** — you can always ask me to check!\n\n`;
+    responseText += `*I'm here to keep you safe, sis! Always feel free to run any suspicious addresses or messages by me before taking action.* 💜`;
+
+  } catch (error) {
+    console.error("Wallet analysis error:", error);
+    responseText += `I wasn't able to fully analyze the wallet address(es) right now, but here's my advice:\n\n`;
+    responseText += `🚨 **If someone is asking you to send crypto to this address, it is very likely a scam.**\n\n`;
+    responseText += `1. **Never send crypto to unknown addresses** — especially if promised something in return\n`;
+    responseText += `2. **No legitimate project asks you to send crypto via chat/DMs**\n`;
+    responseText += `3. **Verify the source** — check official project websites and social media\n`;
+    responseText += `4. **If it sounds too good to be true, it is**\n\n`;
+    responseText += `*Stay safe out there, ${firstName}! I'm always here to help.* 💜`;
+  }
+
+  return streamResponse(responseText);
+}
+
+function streamResponse(text: string) {
+  const encoder = new TextEncoder();
+  const words = text.split(" ");
+  const stream = new ReadableStream({
+    async start(controller) {
+      for (let i = 0; i < words.length; i++) {
+        const word = (i === 0 ? "" : " ") + words[i];
+        const chunk = JSON.stringify({
+          choices: [{ delta: { content: word } }],
+        });
+        controller.enqueue(encoder.encode(`data: ${chunk}\n\n`));
+        await new Promise((r) => setTimeout(r, 20));
+      }
+      controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+      controller.close();
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+    },
+  });
+}
+
+function mockStreamResponse(userMessage: string, profile: UserProfile) {
+  const name = profile.personalInfo.name || "sis";
+  const firstName = name.split(" ")[0];
+>>>>>>> tanvi/main
 
   let response: string;
   const lower = userMessage.toLowerCase();
@@ -129,6 +278,7 @@ function mockStreamResponse(userMessage: string, profile: UserProfile, persona: 
         : "Since you're debt-free, you can put that extra money to work! Focus on building your investment portfolio and emergency fund."
     }`;
   } else {
+<<<<<<< HEAD
     response = `${prefix} That's a great question. Let me share my thoughts.\n\nAs someone earning $${profile.personalInfo.annualIncome.toLocaleString()}/year in ${profile.personalInfo.location}, you're in a strong position. The key is making your money work as hard as you do.\n\nHere are the big things I always think about:\n\n1. **Are you maximizing tax-advantaged accounts?** (401k, Roth IRA)\n2. **Do you have 3-6 months of expenses saved?** (Emergency fund)\n3. **Is your money sitting idle or growing?** (Investing vs. just saving)\n4. **Are you managing debt strategically?**\n\nFeel free to ask me about any of these topics specifically, or anything else on your mind! I'm here for you, sis.\n\n*Quick reminder: I'm here to help you learn and think through options, but I'm not a licensed financial advisor. For major financial decisions, it's always smart to consult with a certified financial planner.*`;
   }
 
@@ -157,4 +307,10 @@ function mockStreamResponse(userMessage: string, profile: UserProfile, persona: 
       Connection: "keep-alive",
     },
   });
+=======
+    response = `Hey ${firstName}! That's a great question. Let me share my thoughts.\n\nAs someone earning $${profile.personalInfo.annualIncome.toLocaleString()}/year in ${profile.personalInfo.location}, you're in a strong position. The key is making your money work as hard as you do.\n\nHere are the big things I always think about:\n\n1. **Are you maximizing tax-advantaged accounts?** (401k, Roth IRA)\n2. **Do you have 3-6 months of expenses saved?** (Emergency fund)\n3. **Is your money sitting idle or growing?** (Investing vs. just saving)\n4. **Are you managing debt strategically?**\n\nFeel free to ask me about any of these topics specifically, or anything else on your mind! I'm here for you, sis.\n\n*Quick reminder: I'm here to help you learn and think through options, but I'm not a licensed financial advisor. For major financial decisions, it's always smart to consult with a certified financial planner.*`;
+  }
+
+  return streamResponse(response);
+>>>>>>> tanvi/main
 }

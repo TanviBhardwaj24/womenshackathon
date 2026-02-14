@@ -7,7 +7,27 @@
       "Bash(npm run build:*)",
       "Bash(npm install:*)",
       "Bash(lsof:*)",
+<<<<<<< HEAD
       "Bash(xargs kill:*)"
+=======
+      "Bash(xargs kill:*)",
+      "Bash(git checkout:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx next build:*)",
+      "Bash(npx next dev:*)",
+      "Bash(curl:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd BEM wallet address extraction + BlockSteer scam detection\n\nIntegrates BEM AI to extract crypto wallet addresses from user messages\nand routes them through BlockSteer for risk analysis. When a user pastes\na message containing an Ethereum or Bitcoin address, Didi flags suspicious\ncontext and returns a safety assessment.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(gh pr create:*)",
+      "Bash(brew install:*)",
+      "Bash(gh auth status:*)",
+      "Bash(git stash:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)",
+      "Bash(echo:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nMerge main into feat/bem-wallet-detection and resolve conflicts\n\nResolved chat route conflict: kept BlockSteer client.chat\\(\\) flow from\nmain alongside BEM wallet address extraction and handler functions.\nRemoved redundant Telegram handler \\(now handled by blocksteerClient.chat\\).\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+>>>>>>> tanvi/main
     ]
   }
 }
