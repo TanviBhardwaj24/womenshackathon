@@ -14,7 +14,6 @@ export default function Button({
   children,
   ...props
 }: ButtonProps) {
-<<<<<<< HEAD
   const base = "inline-flex items-center justify-center font-semibold rounded-full transition-colors disabled:opacity-40 disabled:cursor-not-allowed";
 
   const variants = {
@@ -45,25 +44,6 @@ export default function Button({
         if (hoverBg) e.currentTarget.style.backgroundColor = "";
         if (variant === "primary") e.currentTarget.style.backgroundColor = "#520404";
       }}
-=======
-  const base = "inline-flex items-center justify-center font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
-
-  const variants = {
-    primary: "bg-accent hover:bg-accent-dark text-white",
-    secondary: "border border-border hover:bg-accent-light text-foreground",
-    ghost: "hover:bg-accent-light text-foreground",
-  };
-
-  const sizes = {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-5 py-2.5 text-sm",
-    lg: "px-6 py-3 text-base",
-  };
-
-  return (
-    <button
-      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
->>>>>>> tanvi/main
       {...props}
     >
       {children}

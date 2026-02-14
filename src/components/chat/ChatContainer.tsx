@@ -1,20 +1,13 @@
 "use client";
 
-<<<<<<< HEAD
 import { useRef, useEffect, useState } from "react";
 import { useChat } from "@/context/ChatContext";
 import { useUserProfile } from "@/context/UserProfileContext";
 import { usePersona } from "@/context/PersonaContext";
-=======
-import { useRef, useEffect } from "react";
-import { useChat } from "@/context/ChatContext";
-import { useUserProfile } from "@/context/UserProfileContext";
->>>>>>> tanvi/main
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import SuggestedQuestions from "./SuggestedQuestions";
 import VoiceToggle from "./VoiceToggle";
-<<<<<<< HEAD
 import PersonaSelector from "./PersonaSelector";
 
 export default function ChatContainer() {
@@ -23,13 +16,6 @@ export default function ChatContainer() {
   const { persona } = usePersona();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showPersonaSelector, setShowPersonaSelector] = useState(false);
-=======
-
-export default function ChatContainer() {
-  const { state, sendMessage, toggleVoice } = useChat();
-  const { profile, clearProfile } = useUserProfile();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
->>>>>>> tanvi/main
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,23 +23,14 @@ export default function ChatContainer() {
 
   const handleSend = (content: string) => {
     if (!profile) return;
-<<<<<<< HEAD
     sendMessage(content, profile, persona);
   };
 
-=======
-    sendMessage(content, profile);
-  };
-
-  const firstName = profile?.personalInfo.name.split(" ")[0] || "there";
-
->>>>>>> tanvi/main
   return (
     <div className="flex flex-col h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-surface px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-<<<<<<< HEAD
           <div className="flex items-center gap-3">
             {state.messages.length > 0 ? (
               <button
@@ -87,16 +64,6 @@ export default function ChatContainer() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-=======
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-xs font-bold">
-              DF
-            </div>
-            <div>
-              <h1 className="text-sm font-semibold text-foreground">Didi Finance</h1>
-              <p className="text-[11px] text-text-secondary">Your Financial Big Sister</p>
-            </div>
->>>>>>> tanvi/main
           </div>
           <div className="flex items-center gap-3">
             <VoiceToggle enabled={state.voiceMode} onChange={toggleVoice} />
@@ -136,14 +103,11 @@ export default function ChatContainer() {
 
       {/* Input */}
       <ChatInput onSend={handleSend} disabled={state.isLoading} />
-<<<<<<< HEAD
 
       {/* Persona Selector Overlay */}
       {showPersonaSelector && (
         <PersonaSelector onClose={() => setShowPersonaSelector(false)} />
       )}
-=======
->>>>>>> tanvi/main
     </div>
   );
 }

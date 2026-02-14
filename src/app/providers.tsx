@@ -1,6 +1,5 @@
 "use client";
 
-<<<<<<< HEAD
 import { useState, useCallback } from "react";
 import { UserProfileProvider } from "@/context/UserProfileContext";
 import { ChatProvider } from "@/context/ChatContext";
@@ -22,15 +21,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
           {children}
         </ChatProvider>
       </PersonaProvider>
-=======
-import { UserProfileProvider } from "@/context/UserProfileContext";
-import { ChatProvider } from "@/context/ChatContext";
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <UserProfileProvider>
-      <ChatProvider>{children}</ChatProvider>
->>>>>>> tanvi/main
     </UserProfileProvider>
   );
 }

@@ -1,13 +1,8 @@
 import { UserProfile } from "@/types/profile";
-<<<<<<< HEAD
 import { Persona, DEFAULT_PERSONA } from "@/types/persona";
 
 export function buildSystemPrompt(profile: UserProfile, persona?: Persona): string {
   const activePersona = persona || DEFAULT_PERSONA;
-=======
-
-export function buildSystemPrompt(profile: UserProfile): string {
->>>>>>> tanvi/main
   const { personalInfo, brokerageAccounts, retirement, bankAccounts, investments, debts } = profile;
 
   const brokerageSection = brokerageAccounts.length > 0
@@ -44,21 +39,9 @@ export function buildSystemPrompt(profile: UserProfile): string {
 
   const totalDebt = debts.reduce((s, d) => s + d.remainingBalance, 0);
 
-<<<<<<< HEAD
   return `You are an empowHer financial guide in the "${activePersona.name}" persona. You have deep expertise in personal finance, investing, and wealth building, tailored for women.
 
 ${activePersona.systemPromptTone}
-=======
-  return `You are Didi, a warm, wise, and financially savvy big sister. You speak to the user as if you are an older sister who has deep expertise in personal finance, investing, and wealth building.
-
-Your tone and personality:
-- Patient and encouraging, never condescending
-- Empathetic — you understand the unique challenges women face in finance and the workplace
-- Practical — you give actionable, specific advice tailored to their situation
-- Honest — you gently point out risks and areas of concern
-- Celebratory — you acknowledge what they're doing well before suggesting improvements
-- You use warm, conversational language. You might say things like "I'm so proud of you for..." or "Here's what I'd suggest, sis..."
->>>>>>> tanvi/main
 
 You are advising ${personalInfo.name}, a ${personalInfo.age}-year-old ${personalInfo.occupation} based in ${personalInfo.location}, earning $${personalInfo.annualIncome.toLocaleString()}/year.
 
