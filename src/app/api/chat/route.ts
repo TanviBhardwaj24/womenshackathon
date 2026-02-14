@@ -1,7 +1,8 @@
 import { NextRequest } from "next/server";
 import { buildSystemPrompt } from "@/lib/system-prompt";
 import { UserProfile } from "@/types/profile";
-import { blocksteerClient } from "@/lib/blocksteer";
+import { blocksteerClient, analyzeWalletAddress, extractWalletAddresses } from "@/lib/blocksteer";
+import { extractWalletAddressesViaBem } from "@/lib/bem";
 
 export async function POST(req: NextRequest) {
   const { messages, userProfile } = (await req.json()) as {
@@ -18,6 +19,12 @@ export async function POST(req: NextRequest) {
     } catch (error) {
       console.error("BlockSteer error:", error);
     }
+  }
+
+  // Check for crypto wallet addresses using BEM extraction + BlockSteer analysis
+  const walletAddresses = extractWalletAddresses(lastMessage);
+  if (walletAddresses.length > 0) {
+    return handleWalletAddressCheck(lastMessage, walletAddresses, userProfile);
   }
 
   const apiKey = process.env.MINIMAX_API_KEY;
@@ -76,6 +83,81 @@ export async function POST(req: NextRequest) {
       Connection: "keep-alive",
     },
   });
+}
+
+async function handleWalletAddressCheck(
+  originalMessage: string,
+  walletAddresses: { address: string; type: string }[],
+  profile: UserProfile
+) {
+  const name = profile.personalInfo.name || "sis";
+  const firstName = name.split(" ")[0];
+
+  let responseText = `Hey ${firstName}! 🔍 I detected crypto wallet address(es) in your message. Let me run a safety check...\n\n`;
+
+  try {
+    // Use BEM to extract and analyze the context of the wallet addresses
+    const bemAnalysis = await extractWalletAddressesViaBem(originalMessage);
+    console.log("BEM wallet extraction result:", JSON.stringify(bemAnalysis, null, 2));
+
+    if (bemAnalysis.has_suspicious_context) {
+      responseText += `⚠️ **Suspicious Context Detected:** ${bemAnalysis.message_summary}\n\n`;
+      responseText += `The message you shared has red flags — it appears to be asking you to send cryptocurrency, which is a common scam tactic.\n\n`;
+    }
+
+    // Analyze each wallet address through BlockSteer
+    for (const wallet of walletAddresses.slice(0, 3)) {
+      try {
+        const analysis = await analyzeWalletAddress(wallet.address);
+
+        const riskEmoji =
+          analysis.riskLevel === "critical" ? "🚨" :
+          analysis.riskLevel === "high" ? "⚠️" :
+          analysis.riskLevel === "medium" ? "⚡" : "✅";
+
+        responseText += `**${riskEmoji} ${wallet.type} Address:** \`${wallet.address}\`\n`;
+        responseText += `**Risk Level:** ${analysis.riskLevel.toUpperCase()} (Score: ${analysis.riskScore}/100)\n\n`;
+
+        if (analysis.isRisky) {
+          responseText += `**🚫 Warning:** ${analysis.summary}\n\n`;
+          if (analysis.recommendations.length > 0) {
+            responseText += "**What you should do:**\n";
+            analysis.recommendations.slice(0, 3).forEach((rec, i) => {
+              responseText += `${i + 1}. ${rec}\n`;
+            });
+            responseText += "\n";
+          }
+        } else {
+          responseText += `This address doesn't appear in known scam databases, but please still exercise caution.\n\n`;
+        }
+      } catch (error) {
+        console.error(`Error analyzing wallet ${wallet.address}:`, error);
+        responseText += `**⚠️ ${wallet.type} Address:** \`${wallet.address}\`\n`;
+        responseText += `Unable to fully verify this address at the moment. Please proceed with extreme caution.\n\n`;
+      }
+    }
+
+    // Add contextual safety advice
+    responseText += `---\n\n`;
+    responseText += `**💡 ${firstName}'s Safety Checklist:**\n`;
+    responseText += `1. **Never send crypto to addresses you received in unsolicited messages** — legitimate projects don't ask for this\n`;
+    responseText += `2. **"Send X to receive Y" is ALWAYS a scam** — no one gives away free coins for ETH/BTC\n`;
+    responseText += `3. **Verify on Etherscan/blockchain explorers** — check the address history before any transaction\n`;
+    responseText += `4. **When in doubt, don't send** — you can always ask me to check!\n\n`;
+    responseText += `*I'm here to keep you safe, sis! Always feel free to run any suspicious addresses or messages by me before taking action.* 💜`;
+
+  } catch (error) {
+    console.error("Wallet analysis error:", error);
+    responseText += `I wasn't able to fully analyze the wallet address(es) right now, but here's my advice:\n\n`;
+    responseText += `🚨 **If someone is asking you to send crypto to this address, it is very likely a scam.**\n\n`;
+    responseText += `1. **Never send crypto to unknown addresses** — especially if promised something in return\n`;
+    responseText += `2. **No legitimate project asks you to send crypto via chat/DMs**\n`;
+    responseText += `3. **Verify the source** — check official project websites and social media\n`;
+    responseText += `4. **If it sounds too good to be true, it is**\n\n`;
+    responseText += `*Stay safe out there, ${firstName}! I'm always here to help.* 💜`;
+  }
+
+  return streamResponse(responseText);
 }
 
 function streamResponse(text: string) {
