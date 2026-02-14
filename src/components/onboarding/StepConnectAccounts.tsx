@@ -75,7 +75,10 @@ function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="w-full py-2.5 border-2 border-dashed border-border rounded-lg text-sm text-text-secondary hover:border-accent hover:text-accent transition-colors"
+      className="w-full py-2.5 border-2 border-dashed border-border rounded-xl text-sm text-text-secondary transition-colors"
+      style={{ borderColor: undefined }}
+      onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#520404"; e.currentTarget.style.color = "#520404"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.borderColor = ""; e.currentTarget.style.color = ""; }}
     >
       {"+ " + label}
     </button>
@@ -85,7 +88,7 @@ function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
 function CategoryHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="pb-2 border-b border-border">
-      <h3 className="text-base font-semibold font-serif text-heading">{title}</h3>
+      <h3 className="text-base font-semibold font-serif" style={{ color: "#520404" }}>{title}</h3>
       <p className="text-xs text-text-secondary mt-0.5">{subtitle}</p>
     </div>
   );
@@ -112,7 +115,7 @@ export default function StepConnectAccounts({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold font-serif text-heading">Connect Your Accounts</h2>
+        <h2 className="text-xl font-semibold font-serif" style={{ color: "#520404" }}>Connect Your Accounts</h2>
         <p className="text-sm text-text-secondary mt-1 leading-relaxed">
           Add your financial accounts so we can give you the best advice. All sections are optional.
         </p>
@@ -120,14 +123,14 @@ export default function StepConnectAccounts({
 
       <div className="space-y-3">
         {/* Banking Section */}
-        <div className="border border-border rounded-lg overflow-hidden">
+        <div className="border border-border rounded-xl overflow-hidden">
           <button
             onClick={() => toggleSection("banking")}
-            className="w-full flex items-center justify-between p-4 hover:bg-accent-light/30 transition-colors text-left"
+            className="w-full flex items-center justify-between p-4 transition-colors text-left hover:bg-[#FFEDBD]/30"
           >
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-accent-light flex items-center justify-center">
-                <svg className="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "#FFEDBD" }}>
+                <svg className="w-4 h-4" style={{ color: "#520404" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                 </svg>
               </div>
@@ -169,14 +172,14 @@ export default function StepConnectAccounts({
         </div>
 
         {/* Brokerage Section */}
-        <div className="border border-border rounded-lg overflow-hidden">
+        <div className="border border-border rounded-xl overflow-hidden">
           <button
             onClick={() => toggleSection("brokerage")}
-            className="w-full flex items-center justify-between p-4 hover:bg-accent-light/30 transition-colors text-left"
+            className="w-full flex items-center justify-between p-4 transition-colors text-left hover:bg-[#FFEDBD]/30"
           >
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-accent-light flex items-center justify-center">
-                <svg className="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "#FFEDBD" }}>
+                <svg className="w-4 h-4" style={{ color: "#520404" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
               </div>
@@ -218,14 +221,14 @@ export default function StepConnectAccounts({
         </div>
 
         {/* Retirement Section */}
-        <div className="border border-border rounded-lg overflow-hidden">
+        <div className="border border-border rounded-xl overflow-hidden">
           <button
             onClick={() => toggleSection("retirement")}
-            className="w-full flex items-center justify-between p-4 hover:bg-accent-light/30 transition-colors text-left"
+            className="w-full flex items-center justify-between p-4 transition-colors text-left hover:bg-[#FFEDBD]/30"
           >
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-accent-light flex items-center justify-center">
-                <svg className="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "#FFEDBD" }}>
+                <svg className="w-4 h-4" style={{ color: "#520404" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -248,7 +251,7 @@ export default function StepConnectAccounts({
               <div className="p-3 border border-border rounded-lg space-y-3">
                 <Toggle label="I have a 401(k)" enabled={retirement.has401k} onChange={(v) => onChangeRetirement({ ...retirement, has401k: v })} />
                 {retirement.has401k && (
-                  <div className="space-y-3 pl-3 border-l-2 border-accent-light ml-1">
+                  <div className="space-y-3 pl-3 border-l-2 ml-1" style={{ borderLeftColor: "#FFEDBD" }}>
                     <Input label="Provider" placeholder="e.g., Fidelity" value={retirement.provider401k} onChange={(e) => onChangeRetirement({ ...retirement, provider401k: e.target.value })} />
                     <Input label="Balance ($)" type="number" placeholder="0" value={retirement.balance401k || ""} onChange={(e) => onChangeRetirement({ ...retirement, balance401k: parseInt(e.target.value) || 0 })} />
                     <Input label="Employer Match (%)" type="number" placeholder="4" value={retirement.employerMatch || ""} onChange={(e) => onChangeRetirement({ ...retirement, employerMatch: parseFloat(e.target.value) || 0 })} />
@@ -258,7 +261,7 @@ export default function StepConnectAccounts({
               <div className="p-3 border border-border rounded-lg space-y-3">
                 <Toggle label="I have a Roth IRA" enabled={retirement.hasRothIRA} onChange={(v) => onChangeRetirement({ ...retirement, hasRothIRA: v })} />
                 {retirement.hasRothIRA && (
-                  <div className="space-y-3 pl-3 border-l-2 border-accent-light ml-1">
+                  <div className="space-y-3 pl-3 border-l-2 ml-1" style={{ borderLeftColor: "#FFEDBD" }}>
                     <Input label="Provider" placeholder="e.g., Charles Schwab" value={retirement.providerRothIRA} onChange={(e) => onChangeRetirement({ ...retirement, providerRothIRA: e.target.value })} />
                     <Input label="Balance ($)" type="number" placeholder="0" value={retirement.balanceRothIRA || ""} onChange={(e) => onChangeRetirement({ ...retirement, balanceRothIRA: parseInt(e.target.value) || 0 })} />
                   </div>
@@ -269,14 +272,14 @@ export default function StepConnectAccounts({
         </div>
 
         {/* Crypto & Investments Section */}
-        <div className="border border-border rounded-lg overflow-hidden">
+        <div className="border border-border rounded-xl overflow-hidden">
           <button
             onClick={() => toggleSection("crypto")}
-            className="w-full flex items-center justify-between p-4 hover:bg-accent-light/30 transition-colors text-left"
+            className="w-full flex items-center justify-between p-4 transition-colors text-left hover:bg-[#FFEDBD]/30"
           >
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-accent-light flex items-center justify-center">
-                <svg className="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "#FFEDBD" }}>
+                <svg className="w-4 h-4" style={{ color: "#520404" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>

@@ -66,7 +66,10 @@ export default function OnboardingWizard() {
 
           <button
             onClick={fillDemo}
-            className="mb-6 text-xs px-3 py-1.5 rounded-full bg-accent-light text-accent hover:bg-accent hover:text-white transition-colors font-medium"
+            className="mb-6 text-xs px-3 py-1.5 rounded-full font-medium transition-colors hover:text-white"
+            style={{ backgroundColor: "#FFEDBD", color: "#520404" }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#520404"; e.currentTarget.style.color = "#fff"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#FFEDBD"; e.currentTarget.style.color = "#520404"; }}
           >
             Use Demo Profile
           </button>

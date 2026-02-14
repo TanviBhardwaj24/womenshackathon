@@ -13,10 +13,11 @@ interface Props {
 function SectionHeader({ title, step, onEdit }: { title: string; step: number; onEdit: (s: number) => void }) {
   return (
     <div className="flex items-center justify-between mb-2">
-      <h3 className="text-sm font-semibold font-serif text-heading">{title}</h3>
+      <h3 className="text-sm font-semibold font-serif" style={{ color: "#520404" }}>{title}</h3>
       <button
         onClick={() => onEdit(step)}
-        className="text-xs text-accent hover:text-accent-dark transition-colors"
+        className="text-xs transition-colors"
+        style={{ color: "#520404" }}
       >
         Edit
       </button>
@@ -39,7 +40,7 @@ export default function StepReview({ data, onBack, onComplete, onEditStep }: Pro
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold font-serif text-heading">Review Your Profile</h2>
+        <h2 className="text-xl font-semibold font-serif" style={{ color: "#520404" }}>Review Your Profile</h2>
         <p className="text-sm text-text-secondary mt-1 leading-relaxed">
           Make sure everything looks right before we get started.
         </p>

@@ -39,7 +39,7 @@ export default function StepDebt({ data, onChange, onNext, onBack }: Props) {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold font-serif text-heading">{"What You're Working Through"}</h2>
+        <h2 className="text-xl font-semibold font-serif" style={{ color: "#520404" }}>{"What You're Working Through"}</h2>
         <p className="text-sm text-text-secondary mt-1 leading-relaxed">
           {"No judgment here -- knowing your balances helps us build a plan that actually works for you."}
         </p>
@@ -89,7 +89,9 @@ export default function StepDebt({ data, onChange, onNext, onBack }: Props) {
 
       <button
         onClick={addDebt}
-        className="w-full py-3 border-2 border-dashed border-border rounded-lg text-sm text-text-secondary hover:border-accent hover:text-accent transition-colors"
+        className="w-full py-3 border-2 border-dashed border-border rounded-xl text-sm text-text-secondary transition-colors"
+        onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#520404"; e.currentTarget.style.color = "#520404"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.borderColor = ""; e.currentTarget.style.color = ""; }}
       >
         + Add Debt
       </button>

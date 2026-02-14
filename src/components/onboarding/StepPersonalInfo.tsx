@@ -43,7 +43,7 @@ export default function StepPersonalInfo({ data, userName, onChange, onNext, onB
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold font-serif text-heading">
+        <h2 className="text-xl font-semibold font-serif" style={{ color: "#520404" }}>
           {"Hi " + userName}
         </h2>
         <p className="text-sm text-text-secondary mt-1 leading-relaxed">
