@@ -1,29 +1,58 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUserProfile } from "@/context/UserProfileContext";
+import Image from "next/image";
 
 export default function Home() {
   const { isOnboarded, isLoading } = useUserProfile();
   const router = useRouter();
+  const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    if (!isLoading) {
-      router.push(isOnboarded ? "/chat" : "/onboarding");
-    }
+    const redirectTimer = setTimeout(() => {
+      setFadeOut(true);
+    }, 2800);
+
+    const navigateTimer = setTimeout(() => {
+      if (!isLoading) {
+        router.push(isOnboarded ? "/chat" : "/onboarding");
+      }
+    }, 3400);
+
+    return () => {
+      clearTimeout(redirectTimer);
+      clearTimeout(navigateTimer);
+    };
   }, [isOnboarded, isLoading, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <div className="w-16 h-16 rounded-full bg-accent-light flex items-center justify-center mx-auto mb-4">
-          <span className="text-2xl font-bold text-accent">DF</span>
-        </div>
-        <h1 className="text-xl font-semibold text-foreground">Didi Finance</h1>
-        <p className="text-sm text-text-secondary mt-1">Your Financial Big Sister</p>
-        <div className="mt-6">
-          <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
+    <div
+      className="min-h-screen flex items-center justify-center transition-opacity duration-500"
+      style={{
+        backgroundColor: "#FFEDBD",
+        opacity: fadeOut ? 0 : 1,
+      }}
+    >
+      <div
+        className="flex flex-col items-center"
+        style={{
+          animation: "fade-in 0.8s ease-out forwards",
+        }}
+      >
+        <div
+          style={{
+            animation: "logo-breathe 2.4s ease-in-out infinite",
+          }}
+        >
+          <Image
+            src="/images/logo_empowHer.png"
+            alt="empowHer logo"
+            width={280}
+            height={80}
+            priority
+          />
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Didi Finance — Your Financial Big Sister",
+  title: "empowHer",
   description: "A warm, wise financial advisor built for women",
 };
 
