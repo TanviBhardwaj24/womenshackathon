@@ -44,7 +44,7 @@ export default function StepPersonalInfo({ data, userName, onChange, onNext, onB
     <div className="space-y-5">
       <div>
         <h2 className="text-xl font-semibold font-serif text-heading">
-          {"Nice to meet you, " + userName + "!"}
+          {"Hi " + userName}
         </h2>
         <p className="text-sm text-text-secondary mt-1 leading-relaxed">
           Tell us a bit more so we can personalize your financial guidance.
