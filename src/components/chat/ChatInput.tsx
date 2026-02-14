@@ -34,8 +34,8 @@ export default function ChatInput({ onSend, disabled }: Props) {
           placeholder="Ask about your portfolio, investments, or financial goals..."
           disabled={disabled}
           rows={1}
-          className="flex-1 resize-none px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent text-sm"
-          style={{ minHeight: "44px", maxHeight: "120px" }}
+          className="flex-1 resize-none px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:border-transparent text-sm"
+          style={{ minHeight: "44px", maxHeight: "120px", "--tw-ring-color": "rgba(82, 4, 4, 0.3)" } as React.CSSProperties}
           onInput={(e) => {
             const target = e.target as HTMLTextAreaElement;
             target.style.height = "44px";
@@ -45,7 +45,8 @@ export default function ChatInput({ onSend, disabled }: Props) {
         <button
           onClick={handleSend}
           disabled={disabled || !input.trim()}
-          className="w-10 h-10 rounded-full bg-accent hover:bg-accent-dark text-white flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+          className="w-10 h-10 rounded-full text-white flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+          style={{ backgroundColor: "#520404" }}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />

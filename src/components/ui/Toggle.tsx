@@ -17,9 +17,8 @@ export default function Toggle({ enabled, onChange, label }: ToggleProps) {
     >
       {label && <span className="text-sm text-text-secondary">{label}</span>}
       <div
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-          enabled ? "bg-accent" : "bg-gray-300"
-        }`}
+        className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
+        style={{ backgroundColor: enabled ? "#520404" : "#D1D5DB" }}
       >
         <span
           className={`inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${

@@ -1,21 +1,41 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #FAFAFA;
+  --color-background: #FFFDF7;
   --color-foreground: #1A1A2E;
   --color-surface: #FFFFFF;
-  --color-accent: #7C3AED;
-  --color-accent-light: #EDE9FE;
-  --color-accent-dark: #6D28D9;
+  --color-accent: #520404;
+  --color-accent-light: #FFEDBD;
+  --color-accent-dark: #3A0202;
   --color-text-secondary: #6B7280;
   --color-border: #E5E7EB;
-  --font-sans: var(--font-inter);
+  --color-heading: #520404;
+  --font-sans: var(--font-jakarta);
+  --font-serif: var(--font-playfair);
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Kill ALL default purple/blue focus rings globally */
+*:focus {
+  outline-color: #520404 !important;
+}
+
+*:focus-visible {
+  outline-color: #520404 !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  outline-color: #520404 !important;
+  --tw-ring-color: #520404 !important;
+  border-color: #520404 !important;
 }
 
 @keyframes bounce-dot {
@@ -26,4 +46,15 @@ body {
 @keyframes pulse-wave {
   0%, 100% { transform: scaleY(1); }
   50% { transform: scaleY(2); }
+}
+
+@keyframes logo-breathe {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
 }

@@ -33,7 +33,7 @@ export default function StepRetirement({ data, onChange, onNext, onBack }: Props
           onChange={(v) => update("has401k", v)}
         />
         {data.has401k && (
-          <div className="space-y-3 pl-2 border-l-2 border-accent-light ml-1">
+          <div className="space-y-3 pl-2 border-l-2 ml-1" style={{ borderLeftColor: "#FFEDBD" }}>
             <Input
               label="401(k) Provider"
               placeholder="e.g., Fidelity"
@@ -65,7 +65,7 @@ export default function StepRetirement({ data, onChange, onNext, onBack }: Props
           onChange={(v) => update("hasRothIRA", v)}
         />
         {data.hasRothIRA && (
-          <div className="space-y-3 pl-2 border-l-2 border-accent-light ml-1">
+          <div className="space-y-3 pl-2 border-l-2 ml-1" style={{ borderLeftColor: "#FFEDBD" }}>
             <Input
               label="Roth IRA Provider"
               placeholder="e.g., Charles Schwab"

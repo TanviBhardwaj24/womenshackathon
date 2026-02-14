@@ -1,17 +1,21 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useChat } from "@/context/ChatContext";
 import { useUserProfile } from "@/context/UserProfileContext";
+import { usePersona } from "@/context/PersonaContext";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import SuggestedQuestions from "./SuggestedQuestions";
 import VoiceToggle from "./VoiceToggle";
+import PersonaSelector from "./PersonaSelector";
 
 export default function ChatContainer() {
-  const { state, sendMessage, toggleVoice } = useChat();
+  const { state, sendMessage, clearMessages, toggleVoice } = useChat();
   const { profile, clearProfile } = useUserProfile();
+  const { persona } = usePersona();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showPersonaSelector, setShowPersonaSelector] = useState(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -19,24 +23,47 @@ export default function ChatContainer() {
 
   const handleSend = (content: string) => {
     if (!profile) return;
-    sendMessage(content, profile);
+    sendMessage(content, profile, persona);
   };
-
-  const firstName = profile?.personalInfo.name.split(" ")[0] || "there";
 
   return (
     <div className="flex flex-col h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-surface px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-xs font-bold">
-              DF
-            </div>
-            <div>
-              <h1 className="text-sm font-semibold text-foreground">Didi Finance</h1>
-              <p className="text-[11px] text-text-secondary">Your Financial Big Sister</p>
-            </div>
+          <div className="flex items-center gap-3">
+            {state.messages.length > 0 ? (
+              <button
+                onClick={clearMessages}
+                className="w-8 h-8 flex items-center justify-center rounded-full text-text-secondary hover:text-foreground transition-colors shrink-0"
+                title="Back to home"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            ) : (
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" style={{ backgroundColor: "#520404" }}>
+                eH
+              </div>
+            )}
+            {/* Persona selector chip */}
+            <button
+              onClick={() => setShowPersonaSelector(true)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors"
+              style={{ borderColor: "#520404", color: "#520404" }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#FFEDBD"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = ""; }}
+            >
+              <div
+                className="w-3.5 h-3.5 rounded-full shrink-0"
+                style={{ backgroundColor: persona.cardColor, border: "1px solid rgba(82,4,4,0.2)" }}
+              />
+              {persona.label}
+              <svg className="w-3 h-3 ml-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
           </div>
           <div className="flex items-center gap-3">
             <VoiceToggle enabled={state.voiceMode} onChange={toggleVoice} />
@@ -76,6 +103,11 @@ export default function ChatContainer() {
 
       {/* Input */}
       <ChatInput onSend={handleSend} disabled={state.isLoading} />
+
+      {/* Persona Selector Overlay */}
+      {showPersonaSelector && (
+        <PersonaSelector onClose={() => setShowPersonaSelector(false)} />
+      )}
     </div>
   );
 }
