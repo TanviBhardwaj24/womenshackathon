@@ -114,7 +114,7 @@ export default function PersonaSelector({ onClose }: Props) {
         >
           Money Conversations, Your Way
         </h1>
-        <p className="text-sm text-text-secondary mt-2 leading-relaxed">
+        <p className="text-text-secondary mt-2 leading-relaxed" style={{ fontSize: "22px" }}>
           Support that matches your journey
         </p>
       </div>
