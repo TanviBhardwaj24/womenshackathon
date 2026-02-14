@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useReducer, ReactNode, useCallback } from "react";
+import { createContext, useContext, useReducer, ReactNode, useCallback, useRef, useEffect } from "react";
 import { Message, ChatState } from "@/types/chat";
 import { UserProfile } from "@/types/profile";
 import { Persona } from "@/types/persona";
@@ -65,6 +65,12 @@ const initialState: ChatState = {
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // Use a ref to always have the latest voiceMode value (avoids stale closure)
+  const voiceModeRef = useRef(state.voiceMode);
+  useEffect(() => {
+    voiceModeRef.current = state.voiceMode;
+  }, [state.voiceMode]);
+
   const sendMessage = useCallback(async (content: string, profile: UserProfile, persona?: Persona) => {
     const userMsg: Message = {
       id: crypto.randomUUID(),
@@ -126,7 +132,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         }
 
         // If voice mode is on, fetch TTS
-        if (state.voiceMode && fullResponse) {
+        if (voiceModeRef.current && fullResponse) {
           try {
             const ttsRes = await fetch("/api/tts", {
               method: "POST",
@@ -151,7 +157,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     } finally {
       dispatch({ type: "SET_LOADING", loading: false });
     }
-  }, [state.messages, state.voiceMode]);
+  }, [state.messages]);
 
   const clearMessages = useCallback(() => {
     dispatch({ type: "CLEAR_MESSAGES" });
