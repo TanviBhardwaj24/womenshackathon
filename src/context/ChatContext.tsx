@@ -3,10 +3,11 @@
 import { createContext, useContext, useReducer, ReactNode, useCallback } from "react";
 import { Message, ChatState } from "@/types/chat";
 import { UserProfile } from "@/types/profile";
+import { Persona } from "@/types/persona";
 
 interface ChatContextType {
   state: ChatState;
-  sendMessage: (content: string, profile: UserProfile) => Promise<void>;
+  sendMessage: (content: string, profile: UserProfile, persona?: Persona) => Promise<void>;
   toggleVoice: () => void;
   setIsPlaying: (playing: boolean) => void;
 }
@@ -60,7 +61,7 @@ const initialState: ChatState = {
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const sendMessage = useCallback(async (content: string, profile: UserProfile) => {
+  const sendMessage = useCallback(async (content: string, profile: UserProfile, persona?: Persona) => {
     const userMsg: Message = {
       id: crypto.randomUUID(),
       role: "user",
@@ -87,7 +88,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: allMessages, userProfile: profile }),
+        body: JSON.stringify({ messages: allMessages, userProfile: profile, personaId: persona?.id }),
       });
 
       if (!res.ok) throw new Error("Chat request failed");
