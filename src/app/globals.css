@@ -20,6 +20,24 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
+/* Kill ALL default purple/blue focus rings globally */
+*:focus {
+  outline-color: #520404 !important;
+}
+
+*:focus-visible {
+  outline-color: #520404 !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  outline-color: #520404 !important;
+  --tw-ring-color: #520404 !important;
+  border-color: #520404 !important;
+}
+
 @keyframes bounce-dot {
   0%, 80%, 100% { transform: translateY(0); }
   40% { transform: translateY(-6px); }

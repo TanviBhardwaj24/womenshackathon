@@ -15,8 +15,8 @@ export default function SuggestedQuestions({ onSelect }: Props) {
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-4">
       <div className="text-center mb-8">
-        <div className="w-16 h-16 rounded-full bg-accent-light flex items-center justify-center mx-auto mb-4">
-          <span className="text-2xl font-bold text-accent">DF</span>
+        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "#FFEDBD" }}>
+          <span className="text-2xl font-bold" style={{ color: "#520404" }}>eH</span>
         </div>
         <h2 className="text-xl font-semibold text-foreground">Hey, sis!</h2>
         <p className="text-sm text-text-secondary mt-1">
@@ -28,7 +28,9 @@ export default function SuggestedQuestions({ onSelect }: Props) {
           <button
             key={s.text}
             onClick={() => onSelect(s.text)}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface hover:border-accent hover:bg-accent-light/30 transition-all text-left text-sm text-foreground"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface transition-all text-left text-sm text-foreground hover:bg-[#FFEDBD]/30"
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#520404"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = ""; }}
           >
             <span className="text-lg">{s.icon}</span>
             <span>{s.text}</span>

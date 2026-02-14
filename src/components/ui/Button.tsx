@@ -18,9 +18,11 @@ export default function Button({
 
   const variants = {
     primary: "text-white",
-    secondary: "border border-border hover:bg-accent-light text-foreground",
-    ghost: "hover:bg-accent-light text-foreground",
+    secondary: "border border-border text-foreground",
+    ghost: "text-foreground",
   };
+
+  const hoverBg = variant !== "primary" ? "#FFEDBD" : undefined;
 
   const sizes = {
     sm: "px-4 py-2 text-sm",
@@ -28,12 +30,20 @@ export default function Button({
     lg: "px-8 py-4 text-base",
   };
 
-  const primaryStyle = variant === "primary" ? { backgroundColor: "#520404" } : undefined;
+  const baseStyle = variant === "primary" ? { backgroundColor: "#520404" } : undefined;
 
   return (
     <button
       className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
-      style={primaryStyle}
+      style={baseStyle}
+      onMouseEnter={(e) => {
+        if (hoverBg) e.currentTarget.style.backgroundColor = hoverBg;
+        if (variant === "primary") e.currentTarget.style.backgroundColor = "#3A0202";
+      }}
+      onMouseLeave={(e) => {
+        if (hoverBg) e.currentTarget.style.backgroundColor = "";
+        if (variant === "primary") e.currentTarget.style.backgroundColor = "#520404";
+      }}
       {...props}
     >
       {children}

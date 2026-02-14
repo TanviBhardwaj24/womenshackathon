@@ -42,17 +42,18 @@ export default function MessageBubble({ message, voiceMode, onPlayAudio }: Props
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-xs font-bold shrink-0 mr-2 mt-1">
-          DF
+        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 mr-2 mt-1" style={{ backgroundColor: "#520404" }}>
+          eH
         </div>
       )}
       <div className={`max-w-[80%] ${isUser ? "order-1" : ""}`}>
         <div
           className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
             isUser
-              ? "bg-accent text-white rounded-br-md"
+              ? "text-white rounded-br-md"
               : "bg-surface border border-border text-foreground rounded-bl-md"
           }`}
+          style={isUser ? { backgroundColor: "#520404" } : undefined}
         >
           {message.content || (
             <span className="flex items-center gap-1">
@@ -72,7 +73,9 @@ export default function MessageBubble({ message, voiceMode, onPlayAudio }: Props
         {message.audioUrl && !isUser && (
           <button
             onClick={toggleAudio}
-            className="mt-1.5 flex items-center gap-1.5 text-xs text-text-secondary hover:text-accent transition-colors"
+            className="mt-1.5 flex items-center gap-1.5 text-xs text-text-secondary transition-colors"
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#520404"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = ""; }}
           >
             {isPlaying ? (
               <>

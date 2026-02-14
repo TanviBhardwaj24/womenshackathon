@@ -30,8 +30,8 @@ export default function ChatContainer() {
       <header className="border-b border-border bg-surface px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-xs font-bold">
-              DF
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#520404" }}>
+              eH
             </div>
             <div>
               <h1 className="text-sm font-semibold text-foreground">Didi Finance</h1>
