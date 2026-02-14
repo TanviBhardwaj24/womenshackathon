@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   const truncatedText = text.length > 500 ? text.slice(0, 500) + "..." : text;
 
   try {
-    const response = await fetch(`https://api.minimax.chat/v1/t2a_v2?GroupId=${groupId}`, {
+    const response = await fetch(`https://api.minimax.io/v1/t2a_v2?GroupId=${groupId}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -46,6 +46,8 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await response.json();
+    console.log("MiniMax TTS response keys:", JSON.stringify(Object.keys(result)));
+    console.log("MiniMax TTS result:", JSON.stringify(result).slice(0, 500));
 
     if (result.data?.audio) {
       // The audio is returned as hex-encoded data
