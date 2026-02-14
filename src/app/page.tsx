@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useUserProfile } from "@/context/UserProfileContext";
-import Image from "next/image";
 
 export default function Home() {
   const { isOnboarded, isLoading } = useUserProfile();
@@ -34,16 +33,17 @@ export default function Home() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center transition-opacity duration-500"
+      className="fixed inset-0 flex items-center justify-center transition-opacity duration-500"
       style={{
         backgroundColor: "#FFEDBD",
         opacity: fadeOut ? 0 : 1,
+        zIndex: 9999,
       }}
     >
       <div
-        className="flex flex-col items-center"
+        className="flex flex-col items-center opacity-0"
         style={{
-          animation: "fade-in 0.8s ease-out forwards",
+          animation: "fade-in 0.8s ease-out 0.1s forwards",
         }}
       >
         <div
@@ -51,12 +51,13 @@ export default function Home() {
             animation: "logo-breathe 2.4s ease-in-out infinite",
           }}
         >
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/images/logo_empowHer.png"
             alt="empowHer logo"
             width={280}
             height={80}
-            priority
+            style={{ display: "block" }}
           />
         </div>
       </div>
